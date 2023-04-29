@@ -1,0 +1,25 @@
+<nav class="navbar fixed-top navbar-expand-lg bg-primary mb-5">
+            <div class="container px-5">
+              <span class="fw-bold me-4">Easy-Way Bank</span>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/app}">Dashboard</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" th:href="@{/app/payments}">Payment History</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" th:href="@{/app/transactions}">Transaction History</a>
+                  </li>
+                </ul>
+                <div class="d-flex" role="search">
+                    <p class="me-4 mb-0"><i class="bi bi-circle-fill text-success me-1"></i>Welcome <span th:text="${user.firstName}">John</span></p>
+                    <a th:href="@{/logout}" class="d-block nav-link me-3"><i class="bi bi-box-arrow-in-right me-1"></i> Sign out</a>
+                </div>
+              </div>
+            </div>
+        </nav>
