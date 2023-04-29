@@ -20,4 +20,9 @@ public class AppController {
 	public String signin() {
 		return "signin";
 	}
+	
+	@GetMapping("/app")
+	public String dashboard() {
+		return "dashboard";
+	}
 }
