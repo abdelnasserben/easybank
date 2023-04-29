@@ -3,86 +3,83 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap demo</title>
+        <title>Easy-Way Bank</title>
+        
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+        
         <link rel="stylesheet" th:href="@{/styles/style.css}">
     </head>
-    <body>
-        <nav class="navbar fixed-top navbar-expand-lg bg-primary mb-5">
-            <div class="container px-5">
-              <span class="fw-bold me-4">Easy Bank</span>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/app/}">Dashboard</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/app/payments}">Payment History</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" th:href="@{/app/transactions}">Transaction History</a>
-                  </li>
-                </ul>
-                <div class="d-flex" role="search">
-                    <p class="me-4 mb-0"><i class="bi bi-circle-fill text-success me-1"></i> Welcome John</p>
-                    <a th:href="@{/logout}" class="d-block nav-link me-3"><i class="bi bi-box-arrow-in-right me-1"></i> Sign out</a>
-                </div>
-              </div>
-            </div>
-        </nav>
+    <body class="vh-100 bg-body-tertiary">
 
-        <div class="container-fluid p-5 vh-100 bg-body-tertiary">
+        <div th:replace="@{/fragments/navbar}"></div>
+
+        <div class="container-fluid p-5">
             <div class="p-5">
-                <div class="d-grid gap-2 d-md-flex justify-content-between mb-5">
-                    <button class="btn btn-orange me-md-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNewAccount" aria-controls="offcanvasNewAccount">
-                        <i class="bi bi-credit-card-2-back-fill me-1"></i> New Account
-                    </button>
-                    <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTransact" aria-controls="offcanvasTransact">
-                        <i class="bi bi-send-fill me-1"></i> Transact
-                    </button>
-                </div>
-                <div class="d-grid gap-2 d-flex justify-content-between mb-4">
-                    <p class="h4">Total accounts balance</p>
-                    <p class="h4">0.00$</p>
+                <div th:unless="${errorMessage} == null" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${errorMessage}">message</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
-                <div class="accordion accordion-flush mb-4" id="accordionFlushExample">
-                    <div class="accordion-item">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                          Accordion Item #1
-                        </button>
-                      </h2>
-                      <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
-                      </div>
-                    </div>
-                    <div class="accordion-item">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                          Accordion Item #2
-                        </button>
-                      </h2>
-                      <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
-                      </div>
-                    </div>
-                    <div class="accordion-item">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                          Accordion Item #3
-                        </button>
-                      </h2>
-                      <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                        <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
-                      </div>
-                    </div>
+                <div th:unless="${successMessage} == null" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${successMessage}">message</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <div class="card">
+
+               
+                <div th:unless="${userAccounts.isEmpty}">
+                    <div class="d-grid gap-2 d-md-flex justify-content-between mb-5">
+                        <button class="btn btn-orange me-md-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNewAccount" aria-controls="offcanvasNewAccount">
+                            <i class="bi bi-credit-card-2-back-fill me-1"></i> New Account
+                        </button>
+                        <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTransact" aria-controls="offcanvasTransact">
+                            <i class="bi bi-send-fill me-1"></i> Transact
+                        </button>
+                    </div>
+                    <div class="d-grid gap-2 d-flex justify-content-between mb-4">
+                        <p class="h4">Total accounts balance</p>
+                        <p class="h4" th:text="${totalBalance} + '$'">0.00$</p>
+                    </div>
+
+                    <div class="accordion" id="accordionExample">
+                        <div th:each="account: ${userAccounts}" class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button th:text="${account.accountName}" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" th:attr="data-bs-target='#collapse' + ${account.accountId}" aria-expanded="true" aria-controls="collapseOne">
+                              Account name
+                            </button>
+                          </h2>
+                          <div th:id="'collapse' + ${account.accountId}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items center">
+                                        <span>Account Name</span>
+                                        <span class="fw-bold" th:text="${account.accountName}">Value</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items center">
+                                        <span>Account Number</span>
+                                        <span class="fw-bold" th:text="${account.accountNumber}">Value</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items center">
+                                        <span>Account Type</span>
+                                        <span class="fw-bold" th:text="${account.accountType}">Value</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items center">
+                                        <span>Balance</span>
+                                        <span class="fw-bold" th:text="${account.balance} + '$'">Value</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items center">
+                                        <span>Created at</span>
+                                        <span class="fw-bold" th:text="${#temporals.format(account.createdAt, 'dd-MM-yyyy')}">Value</span>
+                                    </li>
+                                </ul>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+    
+                </div>
+
+                <div th:unless="${!userAccounts.isEmpty}" class="card">
                     <div class="card-header">
                         <i class="bi bi-x-circle ic-size-2 text-danger me-1"></i> No registered account
                     </div>
@@ -93,6 +90,8 @@
                         </button>
                     </div>
                 </div>
+
+
             </div>
         </div>
 
@@ -104,15 +103,17 @@
             <div class="offcanvas-body">
                 <div class="card" id="">
                     <div class="card-body">
-                        <form class="form-basis">
+                        <form method="post" th:action="@{/account}" th:object="${account}" class="form-basis">
                             
                             <div class="mb-3">
-                                <label for="reference" class="form-label">Account name</label>
-                                <input type="text" id="reference" class="form-control" placeholder="Enter Account name">
+                                <label for="accountName" class="form-label">Account name</label>
+                                <input th:field="*{accountName}" type="text" id="accountName" class="form-control" placeholder="Enter Account name">
                             </div>
-                            <select class="form-select bg-light mb-3" aria-label="Default select example">
-                                <option selected> -- Select Account Type --</option>
-                                <option value="1">One</option>
+                            <select th:field="*{accountTypeEnum}" class="form-select bg-light mb-3" aria-label="Default select example">
+                                <option th:value="'select'" selected> -- Select Account Type --</option>
+                                <option th:value="'CHECK'">Check</option>
+                                <option th:value="'SAVINGS'">Savings</option>
+                                <option th:value="'BUSINESS'">Business</option>
                             </select>
                             <button type="submit" class="btn btn-orange px-4">Add Account</button>
                         </form>
@@ -138,26 +139,29 @@
             <div class="tranferCards">
                 <div class="card" id="paymentCard">
                     <div class="card-body">
-                        <form class="form-basis">
+                        <form class="form-basis" method="post" th:action="@{/payment}">
                             <div class="mb-3">
                                 <label for="beneficiary" class="form-label">Account Holder / Beneficiary</label>
-                                <input type="text" id="beneficiary" class="form-control" placeholder="Enter Account Holder/Beneficiary">
+                                <input type="text" name="beneficiary" id="beneficiary" class="form-control" placeholder="Enter Account Holder/Beneficiary">
                             </div>
                             <div class="mb-3">
                                 <label for="beneficiary2" class="form-label">Beneficiary Account Number</label>
-                                <input type="text" id="beneficiary2" class="form-control" placeholder="Enter Beneficiary Account Number">
+                                <input type="text" name="beneficiaryAccountNumber" id="beneficiary2" class="form-control" placeholder="Enter Beneficiary Account Number">
                             </div>
-                            <select class="form-select bg-light mb-3" aria-label="Default select example">
-                                <option selected>-- select Account --</option>
-                                <option value="1">One</option>
+                            <select name="debitAccount" class="form-select bg-light mb-3" aria-label="Default select example">
+                                <option th:value="'default'" selected>-- select debit account --</option>
+                                <option th:each="account: ${userAccounts}"
+                                    th:value="${account.accountNumber}"
+                                    th:text="${account.accountName}">
+                                </option>
                             </select>
                             <div class="mb-3">
                                 <label for="reference" class="form-label">Reference</label>
-                                <input type="text" id="reference" class="form-control" placeholder="Enter Reference">
+                                <input type="text" name="reference" id="reference" class="form-control" placeholder="Enter Reference">
                             </div>
                             <div class="mb-3">
-                                <label for="reference" class="form-label">Payment Amount</label>
-                                <input type="text" id="reference" class="form-control" placeholder="Enter Payment Amount">
+                                <label for="amount" class="form-label">Payment Amount</label>
+                                <input type="text" name="amount" id="amount" class="form-control" placeholder="Enter Payment Amount">
                             </div>
                             <button type="submit" class="btn btn-orange px-4">Pay</button>
                         </form>
@@ -166,18 +170,24 @@
     
                 <div class="card" id="transferCard">
                     <div class="card-body">
-                        <form class="form-basis">
-                            <select class="form-select bg-light mb-3" aria-label="Default select example">
-                                <option selected>-- select Account --</option>
-                                <option value="1">One</option>
+                        <form class="form-basis" method="post" th:action="@{/transfer}">
+                            <select name="debitAccountName" class="form-select bg-light mb-3" aria-label="Default select example">
+                                <option th:value="'default'" selected>-- select debit account --</option>
+                                <option th:each="account: ${userAccounts}"
+                                    th:value="${account.accountNumber}"
+                                    th:text="${account.accountName}">
+                                </option>
                             </select>
-                            <select class="form-select bg-light mb-3" aria-label="Default select example">
-                                <option selected>-- select Account --</option>
-                                <option value="1">One</option>
+                            <select name="creditAccountName" class="form-select bg-light mb-3" aria-label="Default select example">
+                                <option th:value="'default'" selected>-- select credit account --</option>
+                                <option th:each="account: ${userAccounts}"
+                                    th:value="${account.accountNumber}"
+                                    th:text="${account.accountName}">
+                                </option>
                             </select>
                             <div class="mb-3">
                                 <label for="reference" class="form-label">Transfer Amount</label>
-                                <input type="text" id="reference" class="form-control" placeholder="Enter Transfer Amount">
+                                <input type="text" name="amount" id="reference" class="form-control" placeholder="Enter Transfer Amount">
                             </div>
                             <button type="submit" class="btn btn-orange px-4">Transfer</button>
                         </form>
@@ -186,15 +196,18 @@
 
                 <div class="card" id="depositCard">
                     <div class="card-body">
-                        <form class="form-basis">
+                        <form class="form-basis" method="post" th:action="@{/deposit}">
                             
                             <div class="mb-3">
                                 <label for="reference" class="form-label">Deposit Amount</label>
-                                <input type="text" id="reference" class="form-control" placeholder="Enter Deposit Amount">
+                                <input type="text" name="amount" id="reference" class="form-control" placeholder="Enter Deposit Amount">
                             </div>
-                            <select class="form-select bg-light mb-3" aria-label="Default select example">
-                                <option selected>-- select Account --</option>
-                                <option value="1">One</option>
+                            <select name="accountName" class="form-select bg-light mb-3" aria-label="Default select example">
+                                <option th:value="'default'" selected>-- select Account --</option>
+                                <option th:each="account: ${userAccounts}"
+                                    th:value="${account.accountNumber}"
+                                    th:text="${account.accountName}">
+                                </option>
                             </select>
                             <button type="submit" class="btn btn-orange px-4">Deposit</button>
                         </form>
@@ -203,15 +216,18 @@
 
                 <div class="card" id="withdrawCard">
                     <div class="card-body">
-                        <form class="form-basis">
+                        <form class="form-basis" method="post" th:action="@{/withdraw}">
                             
                             <div class="mb-3">
                                 <label for="reference" class="form-label">Withdraw Amount</label>
-                                <input type="text" id="reference" class="form-control" placeholder="Enter Withdraw Amount">
+                                <input type="text" name="amount" id="reference" class="form-control" placeholder="Enter Withdraw Amount">
                             </div>
-                            <select class="form-select bg-light mb-3" aria-label="Default select example">
-                                <option selected>-- select Account --</option>
-                                <option value="1">One</option>
+                            <select name="accountName" class="form-select bg-light mb-3" aria-label="Default select example">
+                                <option th:value="'default'" selected>-- select Account --</option>
+                                <option th:each="account: ${userAccounts}"
+                                    th:value="${account.accountNumber}"
+                                    th:text="${account.accountName}">
+                                </option>
                             </select>
                             <button type="submit" class="btn btn-orange px-4">Withdraw</button>
                         </form>
@@ -221,9 +237,10 @@
 
         </div>
         </div>
-  
+        
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
-        <script th:src="@{/scripts/script.js}"></script>
+    	<script th:src="@{/scripts/script.js}"></script>
     </body>
 </html>

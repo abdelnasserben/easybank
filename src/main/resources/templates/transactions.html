@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Easy-Way Bank</title>
+        
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+        
+        <link rel="stylesheet" th:href="@{/styles/style.css}">
+    </head>
+    <body class="vh-100 bg-body-tertiary">
+
+        <div th:replace="@{/fragments/navbar}"></div>
+
+        <div class="container-fluid p-5">
+            <div class="p-5">
+
+              <div class="card shadow-sm">
+                <div class="card-header fw-bold">
+                  Transactions history
+                </div>
+                <div class="card-body">
+                  <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Transaction Type</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Source</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Reason code</th>
+                            <th scope="col">Created at</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:unless="${transactionsHistory != null}">
+                            <td colspan="8">No payments history</td>
+                        </tr>
+                        <tr th:each="transactionView: ${transactionsHistory}">
+                            <td th:text="${transactionView.transactionId}">value</td>
+                            <td th:text="${transactionView.transactionType}">value</td>
+                            <td th:text="${transactionView.amount}">value</td>
+                            <td th:text="${transactionView.source}">value</td>
+                            <td th:text="${transactionView.status}" th:class="${transactionView.status} == 'COMPLETED' ? 'text-success' : 'text-danger'">value</td>
+                            <td th:text="${transactionView.reasonCode}">value</td>
+                            <td th:text="${#temporals.format(transactionView.createdAt, 'dd-MM-yyyy HH:mm')}">value</td>
+                        </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+                
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+
+    </body>
+</html>

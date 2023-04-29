@@ -12,22 +12,48 @@
 
         <div class="container h-100 text-white">
             <div class="row h-100 justify-content-center align-items-center">
-                <form class="col-6 form-shadowed">
-                    <div class="d-flex align-items-center mb-4">
+                <form method="post" class="col-md-5 form-shadowed" th:action="@{/signin}" th:object="${user}">
+                    <div class="col-md-8 d-flex align-items-center mb-4">
                         <i class="bi bi-person-circle me-3 ic-size-1"></i>
-                        <h1 class="fw-normal">Sign in</h1>
+                        <h1 class="fw-normal">Signin</h1>
                     </div>
-                    <div class="col-8 mb-3">
-                        <input type="email" class="form-control" placeholder="Address email" aria-label="First name">
+					
+					<div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+					  You have been logged out.
+					  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+
+                    <div th:unless="${errorMessage} == null" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <span th:text="${errorMessage}">message</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                    <div class="col-md-8 mb-4">
-                        <input type="password" class="form-control" placeholder="Password">
+
+                    <div th:unless="${successMessage} == null" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <span th:text="${successMessage}">message</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div>
+                        <input type="hidden" th:field="*{userId}">
+                    </div>
+
+                    <div class="mb-3">
+                        <input th:classappend="${#fields.hasErrors('email') ? 'is-invalid' : ''}" type="email" th:field="*{email}" class="form-control" placeholder="Address email" aria-label="Address email">
+                        <div th:errors="*{email}" class="invalid-feedback">
+                            Errors
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <input th:classappend="${#fields.hasErrors('password') ? 'is-invalid' : ''}" type="password" th:field="*{password}" class="form-control" placeholder="Password">
+                        <div th:errors="*{password}" class="invalid-feedback">
+                            Errors
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-warning mb-4">Sign in</button>
 
-                    <p>Don't have an account ? <a th:href="@{/register}" class="text-warning">Register</a></p>
+                    <p>Don't have an account ? <a th:href="@{/register}" class="text-warning">Sign up</a></p>
                     <a th:href="@{/}" class="d-block text-warning"><i class="bi bi-arrow-left-circle-fill me-2 text-warning"></i> Back</a>
-              </form>   
+                </form>   
             </div>
         </div>
         
