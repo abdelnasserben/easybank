@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@100;400;500;700&display=swap');
 
 body {
-    font-family: 'Ubuntu';
+    font-family: 'Ubuntu', 'century gothic';
 }
 
 .body-bg {
-    background-image: url('background.png');
+    background-image: url('../img/background.png');
     background-size: cover;
 }
 
@@ -25,6 +25,7 @@ a{
     background-color: #1368D8 !important;
     color: white !important;
 }
+
 .btn {
     border: 0.1rem solid #444;
     border-radius: 0.3rem;
@@ -42,6 +43,17 @@ a{
 
 .ic-size-2 {
     font-size: 1.3rem;
+}
+
+
+input {
+    box-shadow: 0 0.2rem 0.5rem #222;
+    border-radius: 0.15rem !important;
+}
+
+.form-control:focus {
+    border-color: #222;
+    box-shadow: 0 0.2rem 0.5rem #222;
 }
 
 .navbar.bg-primary .nav-link {

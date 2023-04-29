@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap demo</title>
+        <title>Easy bank</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
         <link rel="stylesheet" th:href="@{/styles/style.css}">
@@ -15,7 +15,7 @@
                 <form class="col-6">
                     <div class="d-flex align-items-center mb-4">
                         <i class="bi bi-person-circle me-3 ic-size-1"></i>
-                        <h1 class="fw-normal">Login</h1>
+                        <h1 class="fw-normal">Sign in</h1>
                     </div>
                     <div class="col-8 mb-3">
                         <input type="email" class="form-control" placeholder="Address email" aria-label="First name">
@@ -25,8 +25,8 @@
                     </div>
                     <button type="submit" class="btn btn-warning mb-4">Sign in</button>
 
-                    <p>Don't have an account ? <a href="register.html" class="text-warning">Sign up</a></p>
-                    <a href="home.html" class="d-block text-warning"><i class="bi bi-arrow-left-circle-fill me-2 text-warning"></i> Back</a>
+                    <p>Don't have an account ? <a th:href="@{/register}" class="text-warning">Register</a></p>
+                    <a th:href="@{/}" class="d-block text-warning"><i class="bi bi-arrow-left-circle-fill me-2 text-warning"></i> Back</a>
                 </form>   
             </div>
         </div>
