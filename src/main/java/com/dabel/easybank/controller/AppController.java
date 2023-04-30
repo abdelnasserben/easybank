@@ -60,9 +60,12 @@ public class AppController {
 		
 		this.user = this.setUser();
 		
+		//TODO: get all user accounts
 		List<Account> userAccounts = accountService.getAllAccountByUserId(user.getUserId());
 		
+		//TODO: retrieves the total amount of the user's accounts
 		double totalBalance = accountService.totalBalance(user.getUserId());
+		
 		
 		model.addAttribute("user", this.user);
 		model.addAttribute("userAccounts", userAccounts);
@@ -77,6 +80,7 @@ public class AppController {
 		
 		this.user = this.setUser();
 		
+		//TODO: retrieves all the payment history of the user's accounts
 		List<PaymentView> paymentsHistory = pViewService.findAll(this.user.getUserId());
 		
 		model.addAttribute("user", this.user);
@@ -91,6 +95,7 @@ public class AppController {
 		
 		this.user = this.setUser();
 		
+		//TODO: retrieves all the transaction history of the user's accounts
 		List<TransactionView> transactionsHistory = trViewService.findAll(this.user.getUserId());
 		
 		model.addAttribute("user", this.user);
@@ -103,30 +108,32 @@ public class AppController {
 	@PostMapping("/account")
 	public String saveAccount(@Valid Account account, BindingResult binding, RedirectAttributes redirect) {
 		
+		//TODO: check if there are no empty values
 		if(binding.hasErrors()) {
 			
-			String message = "Nom et type de compte invalides !";
+			String message = "Invalid account name and type!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
-		//update important informations of an account
+		//TODO: generate an account name
 		String accountNumber = Helper.generateAccountNumber();
 		
+		//TODO: update some account data
 		account.setUserId(user.getUserId());
 		account.setAccountNumber(accountNumber);
 		account.setAccountType(account.getAccountTypeEnum().name());
 		
 		if(accountService.exists(account)) {
 			
-			String message = "Un nom de compte existe déjà !";
+			String message = "Account name already exists!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
-		//saving account
+		//TODO: save account
 		accountService.save(account);
 		
 		//redirect message attribute
-		String message = "Le compte a bien été créé !";
+		String message = "Account has been created!";
 		return redirectWithMessage(message, redirect, false);
 	}
 	
@@ -139,28 +146,34 @@ public class AppController {
 						@RequestParam(value = "accountName") String accountName,
 						RedirectAttributes redirect) {
 		
+		//TODO: check if there are no empty values
 		if(amount.isBlank() || Double.valueOf(amount) <= 0 || accountName.isBlank()) {
 			
-			String message = "Invalid amount and Account name";
+			String message = "Invalid amount and Account name!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
+		//TODO: try to get an account by name
 		Optional<Account> checkAccount = accountService.findByAccountNumber(accountName);
 		
+		//TODO: check if it exists
 		if(!checkAccount.isPresent()) {
 			
-			String message = "Le compte n'existe pas";
+			String message = "The account does not exist!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
-		Double amountCast = Double.valueOf(amount);
-		
-		//we get the account and change his balance
+		//TODO: retrieves the optional account
 		Account account = checkAccount.get();
+				
+		//TODO: change amount type and account balance
+		Double amountCast = Double.valueOf(amount);
 		account.setBalance(account.getBalance() + amountCast);
+		
+		//TODO: save account
 		accountService.save(account);
 		
-		//we save the transaction too
+		//TODO: save the transaction
 		Transaction transaction = new Transaction(
 				account.getAccountId(), 
 				TransactionProvider.Type.DEPOSIT,
@@ -172,8 +185,9 @@ public class AppController {
 		
 		transactionService.save(transaction);
 		
+		
 		//redirecting
-		String message = "Dépôt bien effectué !";
+		String message = "Deposit well made!";
 		return redirectWithMessage(message, redirect, false);
 	}
 	
@@ -182,27 +196,33 @@ public class AppController {
 						@RequestParam(value = "accountName") String accountName,
 						RedirectAttributes redirect) {
 		
+		//TODO: check if there are no empty values
 		if(amount.isBlank() || Double.valueOf(amount) <= 0 || accountName.isBlank()) {
 			
 			String message = "Invalid amount and Account name";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
+		//TODO: try to get an account by name
 		Optional<Account> checkAccount = accountService.findByAccountNumber(accountName);
 		
+		//TODO: check if it exists
 		if(!checkAccount.isPresent()) {
 			
-			String message = "Le compte n'existe pas";
+			String message = "The account does not exist";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
-		
+		//TODO: change amount type
 		Double amountCast = Double.valueOf(amount);
+		
+		//TODO: retrieves the optional account
 		Account account = checkAccount.get();
 		
+		//TODO: check if the account amount is sufficient
 		if(account.getBalance() <= amountCast) {
 			
-			//TODO create failed transaction
+			//TODO: save failed transaction
 			Transaction failedTransaction = new Transaction(
 					account.getAccountId(), 
 					TransactionProvider.Type.WITHDRAW,
@@ -215,15 +235,17 @@ public class AppController {
 			transactionService.save(failedTransaction);
 			
 			//TODO redirecting
-			String message = "Le montant du compte est insuffisant";
+			String message = "The amount of the account is insufficient!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
 		
+		//TODO: Subtract the account amount and save account
 		account.setBalance(account.getBalance() - amountCast);
 		accountService.save(account);
 		
-		//we save the transaction too
+		
+		//TODO: save the transaction
 		Transaction transaction = new Transaction(
 				account.getAccountId(), 
 				TransactionProvider.Type.WITHDRAW,
@@ -236,7 +258,7 @@ public class AppController {
 		transactionService.save(transaction);
 		
 		//redirecting
-		String message = "Retrait bien effectué !";
+		String message = "Withdrawal well done!";
 		return redirectWithMessage(message, redirect, false);
 	}
 	
@@ -246,7 +268,8 @@ public class AppController {
 						@RequestParam(value = "creditAccountName") String creditAccountName,
 						RedirectAttributes redirect) {
 		
-		//check if no empty values
+		
+		//TODO: check if there are no empty values
 		if(amount.isBlank() || Double.valueOf(amount) <= 0) {
 			
 			String message = "Invalid amount";
@@ -254,33 +277,36 @@ public class AppController {
 		}
 		
 		
-		//check it's two different accounts
+		//TODO: check if the selected accounts are different
 		if(debitAccountName.equalsIgnoreCase(creditAccountName)) {
 			
-			String message = "Veuillez chosir deux comptes distincts !";
+			String message = "Please choose two different accounts!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
-		
+		//TODO: try retrieves debit and credit account
 		Optional<Account> checkDebitAccount = accountService.findByAccountNumber(debitAccountName);
 		Optional<Account> checkCreditAccount = accountService.findByAccountNumber(creditAccountName);
 		
-		//check existing accounts in DB
+		//TODO: check the existence of both accounts
 		if(!checkDebitAccount.isPresent() || !checkCreditAccount.isPresent()) {
 			
-			String message = "Comptes invalides !";
+			String message = "Invalid accounts!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
 		
+		//TODO: change amount type
 		Double amountCast = Double.valueOf(amount);
+		
+		//TODO: retrieves the optional accounts
 		Account debitAccount = checkDebitAccount.get();
 		Account creditAccount = checkCreditAccount.get();
 		
-		//check insufficient balance of account
+		//TODO: check if the debit account amount is sufficient
 		if(debitAccount.getBalance() <= amountCast) {
 			
-			//TODO create failed transaction
+			//TODO: save failed transaction
 			Transaction failedTransaction = new Transaction(
 					debitAccount.getAccountId(), 
 					TransactionProvider.Type.TRANSFER,
@@ -292,21 +318,24 @@ public class AppController {
 			
 			transactionService.save(failedTransaction);
 			
-			//TODO redirecting
-			String message = "Le montant du compte " + debitAccount.getAccountName() + " est insuffisant";
+			
+			//TODO: redirecting
+			String message = "The amount of the " + debitAccount.getAccountName() + " account is insufficient";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
 		
-		//update accounts balances
+		//TODO: update account balances
 		debitAccount.setBalance(debitAccount.getBalance() - amountCast);
 		creditAccount.setBalance(creditAccount.getBalance() + amountCast);
 		
-		//saving new balances
+		
+		//TODO: save the accounts with their new balances
 		accountService.save(debitAccount);
 		accountService.save(creditAccount);
 		
-		//create two transactions too for saving
+		
+		//TODO: save their respective transactions
 		Transaction debitTransaction = new Transaction(
 				debitAccount.getAccountId(), 
 				TransactionProvider.Type.TRANSFER,
@@ -325,12 +354,12 @@ public class AppController {
 				TransactionProvider.ReasonCode.SUPPLIED
 				);
 		
-		//saving transactions
 		transactionService.save(debitTransaction);
 		transactionService.save(creditTransaction);
 		
-		//redirecting
-		String message = "Transfert bien effectué !";
+		
+		//TODO: redirecting
+		String message = "Transfer well done!";
 		return redirectWithMessage(message, redirect, false);
 	}
 	
@@ -343,28 +372,37 @@ public class AppController {
 						@RequestParam(value = "amount") String amount,
 						RedirectAttributes redirect) {
 		
+		
+		//TODO: check if there are no empty values
 		if(amount.isBlank() || Double.valueOf(amount) <= 0 || beneficiary.isBlank()
 							|| reference.isBlank()) {
 			
-			String message = "Tous les champs sont obligatoires";
+			String message = "All fields are mandatory!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
+		
+		//TODO: try to get an account by name
 		Optional<Account> checkAccount = accountService.findByAccountNumber(debitAccount);
 		
+		
+		//TODO: check if exists account
 		if(!checkAccount.isPresent()) {
 			
-			String message = "Le compte n'existe pas";
+			String message = "Account does not exist!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
-		//TODO : Parsing values
+		//TODO: change amount type
 		Double amountCast = Double.valueOf(amount);
+		
+		
+		//TODO: retrieves the optional account
 		Account account = checkAccount.get();
 		
 		if(account.getBalance() <= amountCast) {
 			
-			//TODO create failed transaction
+			//TODO: save failed transaction
 			Transaction failedTransaction = new Transaction(
 					account.getAccountId(), 
 					TransactionProvider.Type.PAYMENT,
@@ -376,7 +414,7 @@ public class AppController {
 			
 			transactionService.save(failedTransaction);
 			
-			//TODO : Create a failed payment
+			//TODO: save failed payment too
 			Payment failedPayment = new Payment(
 					account.getAccountId(), 
 					beneficiary, 
@@ -388,16 +426,17 @@ public class AppController {
 			
 			paymentService.save(failedPayment);
 			
-			//TODO redirecting
-			String message = "Le montant du compte est insuffisant";
+			//TODO: redirecting
+			String message = "The amount of the account is insufficient!";
 			return redirectWithMessage(message, redirect, true);
 		}
+		
 		
 		//TODO : Update current account balance and saving account
 		account.setBalance(account.getBalance() - amountCast);
 		accountService.save(account);
 		
-		//TODO : Create a transaction and saving
+		//TODO: save the transaction
 		Transaction transaction = new Transaction(
 				account.getAccountId(), 
 				TransactionProvider.Type.PAYMENT,
@@ -410,7 +449,7 @@ public class AppController {
 		transactionService.save(transaction);
 		
 		
-		//TODO : Create a payment for payments history
+		//TODO: save payment too
 		Payment payment = new Payment(
 				account.getAccountId(), 
 				beneficiary, 
@@ -423,13 +462,14 @@ public class AppController {
 		paymentService.save(payment);
 		
 		
-		//redirecting
-		String message = "Payment bien effectué !";
+		//TODO: redirecting
+		String message = "Payment well done!";
 		return redirectWithMessage(message, redirect, false);
 	}
 	
 	private User setUser() {
 		
+		//TODO: set the user with the one who is connected
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		return userService.getByEmail(auth.getName()).get();
 	}
