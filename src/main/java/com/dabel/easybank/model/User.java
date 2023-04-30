@@ -22,16 +22,16 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userId;
 	
-	@Size(min = 3, message = "Minimum 3 caractères")
+	@Size(min = 3, message = "minimum 3 characters")
 	private String firstName;
 	
-	@Size(min = 3, message = "Minimum 3 caractères")
+	@Size(min = 3, message = "minimum 3 characters")
 	private String lastName;
 	
 	@Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "Email invalid")
 	private String email;
 	
-	@Size(min = 3, message = "Minimum 3 caractères")
+	@Size(min = 3, message = "minimum 3 characters")
 	private String password;
 	
 	@Transient
@@ -45,6 +45,5 @@ public class User {
 	private int verified;
 	private LocalDateTime verifiedAt;
 	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
 	
 }

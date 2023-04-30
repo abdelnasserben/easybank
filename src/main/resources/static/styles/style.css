@@ -22,7 +22,7 @@ a{
 }
 
 .bg-primary {
-    background-color: #1368D8 !important;
+    background-color: #290570 !important;
     color: white !important;
 }
 
@@ -37,14 +37,13 @@ a{
     color: white;
 }
 
-.form-shadowed input {
-    box-shadow: 0 0.2rem 0.5rem #222;
-    border-radius: 0.15rem !important;
+.close {
+    color: #fff !important; 
+    opacity: 1 !important;
 }
 
-.form-shadowed .form-control:focus {
-    border-color: #222;
-    box-shadow: 0 0.2rem 0.5rem #222;
+.ic-size-small {
+	font-size: 0.4rem;
 }
 
 .ic-size-1 {
