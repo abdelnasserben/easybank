@@ -132,7 +132,7 @@ public class AppController {
 		//TODO: save account
 		accountService.save(account);
 		
-		//redirect message attribute
+		//TODO: redirect
 		String message = "Account has been created!";
 		return redirectWithMessage(message, redirect, false);
 	}
@@ -186,7 +186,7 @@ public class AppController {
 		transactionService.save(transaction);
 		
 		
-		//redirecting
+		//TODO: redirecting
 		String message = "Deposit well made!";
 		return redirectWithMessage(message, redirect, false);
 	}
@@ -257,7 +257,7 @@ public class AppController {
 		
 		transactionService.save(transaction);
 		
-		//redirecting
+		//TODO: redirecting
 		String message = "Withdrawal well done!";
 		return redirectWithMessage(message, redirect, false);
 	}
