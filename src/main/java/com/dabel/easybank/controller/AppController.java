@@ -422,7 +422,7 @@ public class AppController {
 					amountCast, 
 					reference, 
 					TransactionProvider.Status.FAILED,
-					TransactionProvider.ReasonCode.PAY_CUSTOMER);
+					TransactionProvider.ReasonCode.INSUFFICIENT_FUNDS);
 			
 			paymentService.save(failedPayment);
 			
