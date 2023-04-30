@@ -17,8 +17,8 @@ public class SendEmailConfig {
 		
 		mailSenderImpl.setHost("smtp.gmail.com");
 		mailSenderImpl.setPort(587);
-		mailSenderImpl.setUsername("springbooter32@gmail.com");
-		mailSenderImpl.setPassword("hlijyzkxkzmagwej");
+		mailSenderImpl.setUsername("youraddress@gmail.com");
+		mailSenderImpl.setPassword("yourpasswordtoken");
 		
 		Properties properties = mailSenderImpl.getJavaMailProperties();
 		
