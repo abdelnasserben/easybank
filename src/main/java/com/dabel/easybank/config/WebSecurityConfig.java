@@ -23,12 +23,6 @@ public class WebSecurityConfig {
 				.anonymous(anonymous -> anonymous
 						.disable()
 				)
-//				.formLogin(login -> login
-//						.loginPage("/signin")
-//						.loginProcessingUrl("/signinProcess")
-//						.usernameParameter("email")
-//						.defaultSuccessUrl("/app", true)
-//				)
 				.logout(logout -> logout
 						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 						.logoutSuccessUrl("/signin?logout")
