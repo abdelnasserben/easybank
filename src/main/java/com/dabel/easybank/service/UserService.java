@@ -1,29 +1,29 @@
 package com.dabel.easybank.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.dabel.easybank.model.Role;
-import com.dabel.easybank.model.User;
+import com.dabel.easybank.dto.RoleDTO;
+import com.dabel.easybank.dto.UserDTO;
+import com.dabel.easybank.exception.UserNotFoundExcption;
 
 @Service
 public interface UserService {
 	
-Optional<User> getById(int id);
+	UserDTO getById(int id) throws UserNotFoundExcption;
 	
-	Optional<User> getByTokenAndCode(String token, String code);
+	UserDTO getByTokenAndCode(String token, String code) throws UserNotFoundExcption;
 	
-	Optional<User> getByEmail(String email);
+	UserDTO getByEmail(String email) throws UserNotFoundExcption;
 	
-	User save(User user);
+	UserDTO save(UserDTO userDTO);
 	
 	boolean exists(String email);
 	
-	boolean validCredentials(User user, String password);
+	boolean validCredentials(UserDTO userDTO, String password);
 	
-	List<Role> getRoles(User user);
+	List<RoleDTO> getRoles(UserDTO userDTO);
 	
 
 }

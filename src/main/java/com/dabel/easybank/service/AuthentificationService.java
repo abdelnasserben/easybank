@@ -8,7 +8,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Service;
 
-import com.dabel.easybank.model.User;
+import com.dabel.easybank.dto.UserDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,12 +19,12 @@ public class AuthentificationService {
 	private SecurityContextRepository securityContextRepository =
 	        new HttpSessionSecurityContextRepository();
 
-	public Authentication authenticate(User user,
+	public Authentication authenticate(UserDTO userDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		
 		SecurityContext context = SecurityContextHolder.createEmptyContext();
 		Authentication authentication = 
-				new TestingAuthenticationToken(user.getEmail(), user.getPassword(), "USER");
+				new TestingAuthenticationToken(userDTO.getEmail(), userDTO.getPassword(), "USER");
 		
 		context.setAuthentication(authentication);
 		SecurityContextHolder.setContext(context);

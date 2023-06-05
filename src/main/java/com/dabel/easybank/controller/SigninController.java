@@ -1,7 +1,5 @@
 package com.dabel.easybank.controller;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.dabel.easybank.model.User;
+import com.dabel.easybank.dto.UserDTO;
 import com.dabel.easybank.service.AuthentificationService;
 import com.dabel.easybank.service.UserService;
 
@@ -34,7 +32,7 @@ public class SigninController {
 	
 
 	@GetMapping("/signin")
-	public String login(User user) {
+	public String login(UserDTO userDTO) {
 		
 		if(authentificationService.isAuthenticated())
 			return "redirect:/app";
@@ -43,26 +41,24 @@ public class SigninController {
 	}
 
 	@PostMapping("/signin")
-	public String loginUser(@Valid User user,
+	public String loginUser(@Valid UserDTO userDTO,
 			BindingResult binding, Model model) {
 		
 		
 		if(binding.hasErrors())
 			return "signin";
 		
-	
-		Optional<User> checkUser = userService.getByEmail(user.getEmail());
 		
-		if(!checkUser.isPresent()) {
+		if(!userService.exists(userDTO.getEmail())) {
 			
 			String emailField = "email";
 			binding.rejectValue(emailField, null, "Email not exists !");
 			return "signin";
 		}
 		
-		User currentUser = checkUser.get();
+		UserDTO user = userService.getByEmail(userDTO.getEmail());
 		
-		if(currentUser.getVerified() == 0) {
+		if(user.getVerified() == 0) {
 			
 			String message = "Your account it's not verified.";
 			model.addAttribute("errorMessage", message);
@@ -71,7 +67,7 @@ public class SigninController {
 		}
 			
 		
-		if(!userService.validCredentials(currentUser, user.getPassword())) {
+		if(!userService.validCredentials(user, userDTO.getPassword())) {
 			
 			String message = "Invalid email and password !";
 			model.addAttribute("errorMessage", message);
@@ -80,7 +76,7 @@ public class SigninController {
 		}
 		
 		//we authenticate the user
-		authentificationService.authenticate(currentUser, request, response);
+		authentificationService.authenticate(user, request, response);
 		
 		
 		return "redirect:/app";

@@ -19,11 +19,4 @@ public class Role {
 	private String username;
 	private String name;
 	
-	
-	public Role(String username, String name) {
-
-		this.username = username;
-		this.name = name;
-	}
-	
 }
