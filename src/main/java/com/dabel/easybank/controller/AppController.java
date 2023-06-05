@@ -15,12 +15,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dabel.easybank.dto.AccountDTO;
 import com.dabel.easybank.dto.PaymentDTO;
+import com.dabel.easybank.dto.PaymentViewDTO;
 import com.dabel.easybank.dto.TransactionDTO;
+import com.dabel.easybank.dto.TransactionViewDTO;
 import com.dabel.easybank.dto.UserDTO;
 import com.dabel.easybank.helper.Helper;
 import com.dabel.easybank.helper.TransactionProvider;
-import com.dabel.easybank.model.PaymentView;
-import com.dabel.easybank.model.TransactionView;
 import com.dabel.easybank.service.AccountService;
 import com.dabel.easybank.service.PaymentService;
 import com.dabel.easybank.service.PaymentViewService;
@@ -80,7 +80,7 @@ public class AppController {
 		this.userDTO = this.setUser();
 		
 		//TODO: retrieves all the payment history of the user's accounts
-		List<PaymentView> paymentsHistory = pViewService.findAll(this.userDTO.getUserId());
+		List<PaymentViewDTO> paymentsHistory = pViewService.findAll(this.userDTO.getUserId());
 		
 		model.addAttribute("user", this.userDTO);
 		model.addAttribute("paymentsHistory", paymentsHistory);
@@ -95,7 +95,7 @@ public class AppController {
 		this.userDTO = this.setUser();
 		
 		//TODO: retrieves all the transaction history of the user's accounts
-		List<TransactionView> transactionsHistory = trViewService.findAll(this.userDTO.getUserId());
+		List<TransactionViewDTO> transactionsHistory = trViewService.findAll(this.userDTO.getUserId());
 		
 		model.addAttribute("user", this.userDTO);
 		model.addAttribute("transactionsHistory", transactionsHistory);
