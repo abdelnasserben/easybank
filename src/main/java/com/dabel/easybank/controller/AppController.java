@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dabel.easybank.dto.AccountDTO;
+import com.dabel.easybank.dto.PaymentDTO;
 import com.dabel.easybank.dto.TransactionDTO;
 import com.dabel.easybank.dto.UserDTO;
 import com.dabel.easybank.helper.Helper;
 import com.dabel.easybank.helper.TransactionProvider;
-import com.dabel.easybank.model.Payment;
 import com.dabel.easybank.model.PaymentView;
 import com.dabel.easybank.model.TransactionView;
 import com.dabel.easybank.service.AccountService;
@@ -388,7 +388,7 @@ public class AppController {
 			transactionService.save(failedTransaction);
 			
 			//TODO: save failed payment too
-			Payment failedPayment = new Payment(
+			PaymentDTO failedPayment = new PaymentDTO(
 					account.getAccountId(), 
 					beneficiary, 
 					beneficiaryAccountNumber, 
@@ -423,7 +423,7 @@ public class AppController {
 		
 		
 		//TODO: save payment too
-		Payment payment = new Payment(
+		PaymentDTO payment = new PaymentDTO(
 				account.getAccountId(), 
 				beneficiary, 
 				beneficiaryAccountNumber, 
