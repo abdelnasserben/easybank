@@ -2,10 +2,14 @@ package com.dabel.easybank.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dabel.easybank.dto.AccountDTO;
+import com.dabel.easybank.exception.AccountNotFoundException;
+import com.dabel.easybank.mapper.AccountMapper;
 import com.dabel.easybank.model.Account;
 import com.dabel.easybank.repository.AccountRepository;
 
@@ -15,16 +19,22 @@ public class AccountService {
 	@Autowired
 	private AccountRepository accountRepository;
 	
-	public List<Account> getAllAccountByUserId(int id) {
+	public List<AccountDTO> getAllAccountByUserId(int id) {
 		
-		return accountRepository.findAllByUserId(id);
+		return accountRepository.findAllByUserId(id).stream()
+				.map(AccountMapper::entityToDto)
+				.collect(Collectors.toList());
 	}
 	
-	public Account save(Account account) {
-		return accountRepository.save(account);
+	public AccountDTO save(AccountDTO accountDTO) {
+		Account account = accountRepository.save(AccountMapper.dtoToEntity(accountDTO));
+		return AccountMapper.entityToDto(account);
 	}
 	
-	public boolean exists(Account account) {
+	public boolean exists(AccountDTO accountDTO) {
+		
+		Account account = AccountMapper.dtoToEntity(accountDTO);
+		
 		return accountRepository
 				.findByUserIdAndAccountName(
 						account.getUserId(), 
@@ -32,8 +42,11 @@ public class AccountService {
 				).isPresent();
 	}
 	
-	public Optional<Account> findByAccountNumber(String accounNumber) {
-		return accountRepository.findIByAccountNumber(accounNumber);
+	public AccountDTO findByAccountNumber(String accounNumber) {
+		Account account = accountRepository.findIByAccountNumber(accounNumber)
+							.orElseThrow(() -> new AccountNotFoundException(accounNumber));
+		
+		return AccountMapper.entityToDto(account);
 	}
 	
 	public double totalBalance(int userId) {

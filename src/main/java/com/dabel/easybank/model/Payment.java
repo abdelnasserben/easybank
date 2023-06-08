@@ -2,9 +2,6 @@ package com.dabel.easybank.model;
 
 import java.time.LocalDateTime;
 
-import com.dabel.easybank.helper.TransactionProvider.ReasonCode;
-import com.dabel.easybank.helper.TransactionProvider.Status;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,21 +26,5 @@ public class Payment {
 	private String status;
 	private String reasonCode;
 	private LocalDateTime createdAt;
-	
-	public Payment() {
-		
-	}
-	
-	public Payment(int accountId, String beneficiary, String beneficiaryAccNo, double amount, String referenceNo,
-			Status status, ReasonCode reasonCode) {
-
-		this.accountId = accountId;
-		this.beneficiary = beneficiary;
-		this.beneficiaryAccNo = beneficiaryAccNo;
-		this.amount = amount;
-		this.referenceNo = referenceNo;
-		this.status = status.name();
-		this.reasonCode = reasonCode.name();
-	}
 	
 }

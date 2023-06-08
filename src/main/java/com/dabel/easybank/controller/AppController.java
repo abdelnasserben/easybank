@@ -1,7 +1,6 @@
 package com.dabel.easybank.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,14 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dabel.easybank.dto.AccountDTO;
+import com.dabel.easybank.dto.PaymentDTO;
+import com.dabel.easybank.dto.PaymentViewDTO;
+import com.dabel.easybank.dto.TransactionDTO;
+import com.dabel.easybank.dto.TransactionViewDTO;
+import com.dabel.easybank.dto.UserDTO;
 import com.dabel.easybank.helper.Helper;
 import com.dabel.easybank.helper.TransactionProvider;
-import com.dabel.easybank.model.Account;
-import com.dabel.easybank.model.Payment;
-import com.dabel.easybank.model.PaymentView;
-import com.dabel.easybank.model.Transaction;
-import com.dabel.easybank.model.TransactionView;
-import com.dabel.easybank.model.User;
 import com.dabel.easybank.service.AccountService;
 import com.dabel.easybank.service.PaymentService;
 import com.dabel.easybank.service.PaymentViewService;
@@ -34,7 +33,7 @@ import jakarta.validation.Valid;
 @Controller
 public class AppController {
 	
-	private User user;
+	private UserDTO userDTO;
 	
 	@Autowired
 	private UserService userService;
@@ -56,18 +55,18 @@ public class AppController {
 	
 	
 	@GetMapping("/app")
-	public String dashboard(Account account, Model model) {
+	public String dashboard(AccountDTO accountDTO, Model model) {
 		
-		this.user = this.setUser();
+		this.userDTO = this.setUser();
 		
 		//TODO: get all user accounts
-		List<Account> userAccounts = accountService.getAllAccountByUserId(user.getUserId());
+		List<AccountDTO> userAccounts = accountService.getAllAccountByUserId(userDTO.getUserId());
 		
 		//TODO: retrieves the total amount of the user's accounts
-		double totalBalance = accountService.totalBalance(user.getUserId());
+		double totalBalance = accountService.totalBalance(userDTO.getUserId());
 		
 		
-		model.addAttribute("user", this.user);
+		model.addAttribute("user", this.userDTO);
 		model.addAttribute("userAccounts", userAccounts);
 		model.addAttribute("totalBalance", totalBalance);
 		
@@ -78,12 +77,12 @@ public class AppController {
 	@GetMapping("/app/payments")
 	private String paymensHistory(Model model) {
 		
-		this.user = this.setUser();
+		this.userDTO = this.setUser();
 		
 		//TODO: retrieves all the payment history of the user's accounts
-		List<PaymentView> paymentsHistory = pViewService.findAll(this.user.getUserId());
+		List<PaymentViewDTO> paymentsHistory = pViewService.findAll(this.userDTO.getUserId());
 		
-		model.addAttribute("user", this.user);
+		model.addAttribute("user", this.userDTO);
 		model.addAttribute("paymentsHistory", paymentsHistory);
 	
 		return "payments";
@@ -93,12 +92,12 @@ public class AppController {
 	@GetMapping("/app/transactions")
 	private String transactionsHistory(Model model) {
 		
-		this.user = this.setUser();
+		this.userDTO = this.setUser();
 		
 		//TODO: retrieves all the transaction history of the user's accounts
-		List<TransactionView> transactionsHistory = trViewService.findAll(this.user.getUserId());
+		List<TransactionViewDTO> transactionsHistory = trViewService.findAll(this.userDTO.getUserId());
 		
-		model.addAttribute("user", this.user);
+		model.addAttribute("user", this.userDTO);
 		model.addAttribute("transactionsHistory", transactionsHistory);
 	
 		return "transactions";
@@ -106,7 +105,7 @@ public class AppController {
 	
 	
 	@PostMapping("/account")
-	public String saveAccount(@Valid Account account, BindingResult binding, RedirectAttributes redirect) {
+	public String saveAccount(@Valid AccountDTO accountDTO, BindingResult binding, RedirectAttributes redirect) {
 		
 		//TODO: check if there are no empty values
 		if(binding.hasErrors()) {
@@ -119,18 +118,18 @@ public class AppController {
 		String accountNumber = Helper.generateAccountNumber();
 		
 		//TODO: update some account data
-		account.setUserId(user.getUserId());
-		account.setAccountNumber(accountNumber);
-		account.setAccountType(account.getAccountTypeEnum().name());
+		accountDTO.setUserId(userDTO.getUserId());
+		accountDTO.setAccountNumber(accountNumber);
+		accountDTO.setAccountType(accountDTO.getAccountTypeEnum().name());
 		
-		if(accountService.exists(account)) {
+		if(accountService.exists(accountDTO)) {
 			
 			String message = "Account name already exists!";
 			return redirectWithMessage(message, redirect, true);
 		}
 		
 		//TODO: save account
-		accountService.save(account);
+		accountService.save(accountDTO);
 		
 		//TODO: redirect
 		String message = "Account has been created!";
@@ -154,17 +153,14 @@ public class AppController {
 		}
 		
 		//TODO: try to get an account by name
-		Optional<Account> checkAccount = accountService.findByAccountNumber(accountName);
+		AccountDTO account = accountService.findByAccountNumber(accountName);
 		
-		//TODO: check if it exists
+		/*TODO: check if it exists
 		if(!checkAccount.isPresent()) {
 			
 			String message = "The account does not exist!";
 			return redirectWithMessage(message, redirect, true);
-		}
-		
-		//TODO: retrieves the optional account
-		Account account = checkAccount.get();
+		}*/
 				
 		//TODO: change amount type and account balance
 		Double amountCast = Double.valueOf(amount);
@@ -174,7 +170,7 @@ public class AppController {
 		accountService.save(account);
 		
 		//TODO: save the transaction
-		Transaction transaction = new Transaction(
+		TransactionDTO transaction = new TransactionDTO(
 				account.getAccountId(), 
 				TransactionProvider.Type.DEPOSIT,
 				amountCast,
@@ -204,26 +200,24 @@ public class AppController {
 		}
 		
 		//TODO: try to get an account by name
-		Optional<Account> checkAccount = accountService.findByAccountNumber(accountName);
+		AccountDTO account = accountService.findByAccountNumber(accountName);
 		
-		//TODO: check if it exists
+		/*TODO: check if it exists
 		if(!checkAccount.isPresent()) {
 			
 			String message = "The account does not exist";
 			return redirectWithMessage(message, redirect, true);
-		}
+		}*/
 		
 		//TODO: change amount type
 		Double amountCast = Double.valueOf(amount);
-		
-		//TODO: retrieves the optional account
-		Account account = checkAccount.get();
+	
 		
 		//TODO: check if the account amount is sufficient
 		if(account.getBalance() <= amountCast) {
 			
 			//TODO: save failed transaction
-			Transaction failedTransaction = new Transaction(
+			TransactionDTO failedTransaction = new TransactionDTO(
 					account.getAccountId(), 
 					TransactionProvider.Type.WITHDRAW,
 					amountCast,
@@ -246,7 +240,7 @@ public class AppController {
 		
 		
 		//TODO: save the transaction
-		Transaction transaction = new Transaction(
+		TransactionDTO transaction = new TransactionDTO(
 				account.getAccountId(), 
 				TransactionProvider.Type.WITHDRAW,
 				amountCast,
@@ -285,29 +279,19 @@ public class AppController {
 		}
 		
 		//TODO: try retrieves debit and credit account
-		Optional<Account> checkDebitAccount = accountService.findByAccountNumber(debitAccountName);
-		Optional<Account> checkCreditAccount = accountService.findByAccountNumber(creditAccountName);
-		
-		//TODO: check the existence of both accounts
-		if(!checkDebitAccount.isPresent() || !checkCreditAccount.isPresent()) {
-			
-			String message = "Invalid accounts!";
-			return redirectWithMessage(message, redirect, true);
-		}
+		AccountDTO debitAccount = accountService.findByAccountNumber(debitAccountName);
+		AccountDTO creditAccount = accountService.findByAccountNumber(creditAccountName);
 		
 		
 		//TODO: change amount type
 		Double amountCast = Double.valueOf(amount);
 		
-		//TODO: retrieves the optional accounts
-		Account debitAccount = checkDebitAccount.get();
-		Account creditAccount = checkCreditAccount.get();
 		
 		//TODO: check if the debit account amount is sufficient
 		if(debitAccount.getBalance() <= amountCast) {
 			
 			//TODO: save failed transaction
-			Transaction failedTransaction = new Transaction(
+			TransactionDTO failedTransaction = new TransactionDTO(
 					debitAccount.getAccountId(), 
 					TransactionProvider.Type.TRANSFER,
 					amountCast,
@@ -336,7 +320,7 @@ public class AppController {
 		
 		
 		//TODO: save their respective transactions
-		Transaction debitTransaction = new Transaction(
+		TransactionDTO debitTransaction = new TransactionDTO(
 				debitAccount.getAccountId(), 
 				TransactionProvider.Type.TRANSFER,
 				amountCast,
@@ -345,7 +329,7 @@ public class AppController {
 				TransactionProvider.ReasonCode.SUPPLY
 				);
 		
-		Transaction creditTransaction = new Transaction(
+		TransactionDTO creditTransaction = new TransactionDTO(
 				creditAccount.getAccountId(), 
 				TransactionProvider.Type.TRANSFER,
 				amountCast,
@@ -383,27 +367,16 @@ public class AppController {
 		
 		
 		//TODO: try to get an account by name
-		Optional<Account> checkAccount = accountService.findByAccountNumber(debitAccount);
-		
-		
-		//TODO: check if exists account
-		if(!checkAccount.isPresent()) {
-			
-			String message = "Account does not exist!";
-			return redirectWithMessage(message, redirect, true);
-		}
+		AccountDTO account = accountService.findByAccountNumber(debitAccount);
 		
 		//TODO: change amount type
 		Double amountCast = Double.valueOf(amount);
 		
 		
-		//TODO: retrieves the optional account
-		Account account = checkAccount.get();
-		
 		if(account.getBalance() <= amountCast) {
 			
 			//TODO: save failed transaction
-			Transaction failedTransaction = new Transaction(
+			TransactionDTO failedTransaction = new TransactionDTO(
 					account.getAccountId(), 
 					TransactionProvider.Type.PAYMENT,
 					amountCast,
@@ -415,7 +388,7 @@ public class AppController {
 			transactionService.save(failedTransaction);
 			
 			//TODO: save failed payment too
-			Payment failedPayment = new Payment(
+			PaymentDTO failedPayment = new PaymentDTO(
 					account.getAccountId(), 
 					beneficiary, 
 					beneficiaryAccountNumber, 
@@ -437,7 +410,7 @@ public class AppController {
 		accountService.save(account);
 		
 		//TODO: save the transaction
-		Transaction transaction = new Transaction(
+		TransactionDTO transaction = new TransactionDTO(
 				account.getAccountId(), 
 				TransactionProvider.Type.PAYMENT,
 				amountCast,
@@ -450,7 +423,7 @@ public class AppController {
 		
 		
 		//TODO: save payment too
-		Payment payment = new Payment(
+		PaymentDTO payment = new PaymentDTO(
 				account.getAccountId(), 
 				beneficiary, 
 				beneficiaryAccountNumber, 
@@ -467,11 +440,11 @@ public class AppController {
 		return redirectWithMessage(message, redirect, false);
 	}
 	
-	private User setUser() {
+	private UserDTO setUser() {
 		
 		//TODO: set the user with the one who is connected
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		return userService.getByEmail(auth.getName()).get();
+		return userService.getByEmail(auth.getName());
 	}
 	
 	

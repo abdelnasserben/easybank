@@ -1,7 +1,6 @@
 package com.dabel.easybank.controller;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.dabel.easybank.model.User;
+import com.dabel.easybank.dto.UserDTO;
 import com.dabel.easybank.service.AuthentificationService;
 import com.dabel.easybank.service.UserService;
 
@@ -47,19 +46,16 @@ public class BasicController {
 		if(token == null || token.isBlank() || code == null || code.isBlank())
 			return "redirect:/404";
 		
-		Optional<User> checkUser = userService.getByTokenAndCode(token, code);
+		UserDTO user = userService.getByTokenAndCode(token, code);
 		
-		if(!checkUser.isPresent())
-			return "redirect:/404";
 		
 		//TODO: update user verification values
-		User currentUser = checkUser.get();
-		currentUser.setVerified(1);
-		currentUser.setVerifiedAt(LocalDateTime.now());
-		userService.save(currentUser);
+		user.setVerified(1);
+		user.setVerifiedAt(LocalDateTime.now());
+		userService.save(user);
 		
 		String message = "Your account has been successfuly verified. Please sign in";
-		model.addAttribute("user", currentUser);
+		model.addAttribute("user", user);
 		redirect.addFlashAttribute("successMessage", message);
 		
 		return "redirect:/signin";

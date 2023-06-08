@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dabel.easybank.dto.UserDTO;
 import com.dabel.easybank.helper.Helper;
 import com.dabel.easybank.model.Email;
-import com.dabel.easybank.model.User;
 import com.dabel.easybank.service.AuthentificationService;
 import com.dabel.easybank.service.SendEmailService;
 import com.dabel.easybank.service.UserService;
@@ -31,7 +31,7 @@ public class RegisterController {
 	
 
 	@GetMapping("/register")
-	public String register(User user) {
+	public String register(UserDTO userDTO) {
 		
 		if(authentificationService.isAuthenticated())
 			return "redirect:/dashboard";
@@ -40,13 +40,13 @@ public class RegisterController {
 	}
 	
 	@PostMapping("/register")
-	public String registerUser(@Valid User user, BindingResult binding, RedirectAttributes redirect) {
+	public String registerUser(@Valid UserDTO userDTO, BindingResult binding, RedirectAttributes redirect) {
 
 		if(binding.hasErrors())
 			return "register";
 		
 		
-		if(userService.exists(user.getEmail())) {
+		if(userService.exists(userDTO.getEmail())) {
 			
 			String emailField = "email";
 			binding.rejectValue(emailField, null, "Email already exists !");
@@ -71,22 +71,22 @@ public class RegisterController {
 		String code = Helper.generateCode();
 
 		//TODO: update user token and code
-		user.setToken(token);
-		user.setCode(code);
+		userDTO.setToken(token);
+		userDTO.setCode(code);
 		
 		//TODO: get HTML parsing model
-		String body = SendEmailService.confirmEmailBodyParser(user.getToken(), user.getCode());
+		String body = SendEmailService.confirmEmailBodyParser(userDTO.getToken(), userDTO.getCode());
 		
 		
 		//TODO: Initiate email object
-		Email email = new Email(user.getEmail(), "Confirm account", body);
+		Email email = new Email(userDTO.getEmail(), "Confirm account", body);
 		
 		
 		try {
 			
 			//TODO: Send confirmation email and save user
 			sendEmailService.sendHtmlEmail(email);
-			userService.save(user);
+			userService.save(userDTO);
 			
 		} catch (MessagingException e) {
 			
