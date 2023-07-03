@@ -44,7 +44,7 @@ public class AccountService {
 	
 	public AccountDTO findByAccountNumber(String accounNumber) {
 		Account account = accountRepository.findIByAccountNumber(accounNumber)
-							.orElseThrow(() -> new AccountNotFoundException(accounNumber));
+							.orElseThrow(() -> new AccountNotFoundException("Account not found"));
 		
 		return AccountMapper.entityToDto(account);
 	}

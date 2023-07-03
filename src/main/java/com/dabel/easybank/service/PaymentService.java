@@ -23,7 +23,7 @@ public class PaymentService {
 		return PaymentMapper.entityToDto(payment);
 	}
 	
-	public List<PaymentDTO> save(int accountId) {
+	public List<PaymentDTO> getPaymentsByAccountId(int accountId) {
 		return paymentRepository.findAllByAccountId(accountId)
 				.stream()
 				.map(PaymentMapper::entityToDto)
